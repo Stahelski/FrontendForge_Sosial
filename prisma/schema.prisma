@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+  username String @unique
+  email String @unique
+  displayName String? @map("display_name") 
+  bio String? 
+  avatarUrl String? @map("avatar_url") 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relasjoner
+  projects Project[]
+  ProjectLikes ProjectLike[] 
+  comments Comment[]
+
+  @@map("users")
+}
+
+model Project {
+  id String @id @default(cuid())
+  userId String @map("user_id")
+  title String 
+  description String? 
+  demoUrl String? @map("demo_url") 
+  githubUrl String @map("github_url")
+  isPublic Boolean @default(true) @map("is_public")
+   createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relasjoner
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes ProjectLike[]
+  comments Comment[]
+
+  @@map("projects")
+}
+
+model ProjectLike {
+   id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  projectId String   @map("project_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relasjoner
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@map("project_likes")
+}
+
+model Comment {
+  id String @id @default(cuid())
+  userId String @map("user_id")
+  projectId String @map("project_id")
+  content String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relasjoner
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
