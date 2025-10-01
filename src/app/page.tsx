@@ -281,7 +281,7 @@ export default function Home(): JSX.Element {
         </div>
       </section>
 
-      {/* Timeline Section */}
+      {/* Timeline Section safe */}
       <section className="timeline" id="fremtid">
         <div className="container">
           <div className="timeline-content">
