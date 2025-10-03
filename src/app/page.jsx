@@ -1,9 +1,8 @@
 "use client";
 
-import type { JSX } from "react";
 import { useEffect } from "react";
 
-export default function Home(): JSX.Element {
+export default function Home() {
   useEffect(() => {
     const particlesContainer = document.getElementById("particles");
     if (particlesContainer && particlesContainer.childElementCount === 0) {
@@ -29,7 +28,7 @@ export default function Home(): JSX.Element {
     // Progress bar animation
     const progressEl = document.getElementById("progressBar");
     const progressSection = document.querySelector(".progress-section");
-    let progressObserver: IntersectionObserver | null = null;
+    let progressObserver = null;
     if (progressEl && progressSection) {
       progressObserver = new IntersectionObserver(
         (entries) => {
@@ -57,16 +56,12 @@ export default function Home(): JSX.Element {
     animatedEls.forEach((el) => scrollObserver.observe(el));
 
     // Stagger effects
-    document
-      .querySelectorAll<HTMLElement>(".timeline-item")
-      .forEach((item, index) => {
-        item.style.animationDelay = `${index * 0.2}s`;
-      });
-    document
-      .querySelectorAll<HTMLElement>(".feature-card")
-      .forEach((card, index) => {
-        card.style.transitionDelay = `${index * 0.1}s`;
-      });
+    document.querySelectorAll(".timeline-item").forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.2}s`;
+    });
+    document.querySelectorAll(".feature-card").forEach((card, index) => {
+      card.style.transitionDelay = `${index * 0.1}s`;
+    });
 
     return () => {
       window.removeEventListener("scroll", onScroll);
